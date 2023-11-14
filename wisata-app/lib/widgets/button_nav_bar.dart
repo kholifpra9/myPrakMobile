@@ -1,68 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:wisata_app/utils/contants.dart';
+import 'package:wisata_app/constants.dart';
+import 'package:wisata_app/screens/Profile_Screen.dart';
+import 'package:wisata_app/screens/dashboard_screen.dart';
 
-class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({
-    super.key,
-  });
+enum MenuState { home, message, profile }
+
+class ButtonNavBar extends StatelessWidget {
+  const ButtonNavBar({
+    Key? key,
+    required this.selectedMenu,
+  }) : super(key: key);
+
+  final MenuState selectedMenu;
 
   @override
   Widget build(BuildContext context) {
+    const Color inActiveIconColor = Color(0xFFB6B6B6);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-      height: 80,
-      color: Colors.white,
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          BottomNavItem(
-            title: "Home",
-            svgScr: "assets/icons/home.svg",
-            isActive: true,
-          ),
-          BottomNavItem(
-            title: "Chat",
-            svgScr: "assets/icons/chat.svg",
-          ),
-          BottomNavItem(
-            title: "Settings",
-            svgScr: "assets/icons/settings.svg",
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, -15),
+            blurRadius: 20,
+            color: const Color(0xFFDADADA).withOpacity(0.15),
           ),
         ],
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(40),
+          topRight: Radius.circular(40),
+        ),
       ),
-    );
-  }
-}
-
-class BottomNavItem extends StatelessWidget {
-  final String svgScr;
-  final String title;
-  final VoidCallback? press;
-  final bool isActive;
-  const BottomNavItem({
-    super.key,
-    required this.svgScr,
-    required this.title,
-    this.press,
-    this.isActive = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: press ?? () {},
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          SvgPicture.asset(svgScr,
-              color: isActive ? primaryColor : textDarkColor, height: 32, width: 32, fit: BoxFit.scaleDown),
-          Text(
-            title,
-            style: TextStyle(color: isActive ? primaryColor : textDarkColor),
-          ),
-        ],
-      ),
+      child: SafeArea(
+          top: false,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: SvgPicture.asset(
+                  "assets/icons/home.svg",
+                  color: MenuState.home == selectedMenu
+                      ? primaryColor
+                      : inActiveIconColor,
+                ),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const DashboardScreen())),
+              ),
+              IconButton(
+                icon: SvgPicture.asset("assets/icons/message.svg"),
+                onPressed: () {},
+              ),
+              IconButton(
+                  icon: SvgPicture.asset(
+                    "assets/icons/account.svg",
+                    color: MenuState.profile == selectedMenu
+                        ? primaryColor
+                        : inActiveIconColor,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProfileScreen()));
+                  }),
+            ],
+          )),
     );
   }
 }

@@ -11,9 +11,8 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    // print("Size ${size.height * .45}");
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(),
+      bottomNavigationBar: const ButtonNavBar(selectedMenu: MenuState.home),
       body: Stack(
         children: <Widget>[
           Container(
@@ -65,7 +64,8 @@ class DashboardScreen extends StatelessWidget {
                           title: "Vacation",
                           imgSrc: "assets/icons/vacation.png",
                           press: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
                               return MainScreen();
                             }));
                           },

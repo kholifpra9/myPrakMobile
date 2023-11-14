@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wisata_app/utils/contants.dart';
+import 'package:wisata_app/constants.dart';
 
 class CategoryCard extends StatelessWidget {
   final String imgSrc;
@@ -14,40 +14,46 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(13),
-      child: Container(
-        // padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(13),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 17),
-              blurRadius: 17,
-              spreadRadius: -23,
-              color: shadowColor,
-            ),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(13),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 3),
+            blurRadius: 6,
+            spreadRadius: 0,
+            color: shadowColor.withOpacity(0.2),
+          ),
+        ],
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.2), // Border color
+          width: 1.0, // Border width
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: press,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: <Widget>[
-                  const Spacer(),
-                  Image.asset(imgSrc),
-                  const Spacer(),
-                  Text(title,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
-                            fontSize: 15,
-                          ))
-                ],
-              ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: press,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  imgSrc,
+                  height: 100,
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
