@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:wisata_app/screens/register_screen.dart';
 import 'package:wisata_app/utils/constants.dart';
 import 'package:wisata_app/helper/keyboard.dart';
 import 'package:wisata_app/helper/session_manager.dart';
 import 'package:wisata_app/screens/success_screen.dart';
+import 'package:wisata_app/screens/dashboard_screen.dart';
 import 'package:wisata_app/services/auth_services.dart';
 import 'package:wisata_app/common/size_config.dart';
 import 'package:wisata_app/widgets/custom_snackbar.dart';
@@ -36,45 +38,48 @@ class _LoginScreenState extends State<LoginScreen> {
     checkIsLogin(context);
   }
 
-  // Future<void> _login() async {
-  //   try {
-  //     final user = await AuthService().login(email!, password!);
+  Future<void> _login() async {
+    try {
+      final result = await AuthService().login(email!, password!);
+      if (result['success']) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SuccessScreen(
+                    text: 'Login Success',
+                    press: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DashboardScreen()),
+                        (route) => false,
+                      );
+                    },
+                  )),
+          (route) => false,
+        );
+      } else {
+        setState(() {
+          _error = result['message'];
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Login Failed';
+      });
+    }
 
-  //     if (user.email.isNotEmpty) {
-  //       setState(() {
-  //         _error = '';
-  //       });
-
-  //       // Simpan data pengguna ke SharedPreferences
-  //       final prefs = await SessionManager.getInstance();
-  //       await prefs.saveUserData(user.email);
-
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) {
-  //         return const LoginSuccessScreen();
-  //       }));
-  //     } else {
-  //       setState(() {
-  //         _error = 'Wrong Email or Password';
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //     setState(() {
-  //       _error = 'Login Failed';
-  //     });
-  //   }
-
-  //   if (_error.isNotEmpty) {
-  //     CustomSnackbar.show(
-  //       scaffoldMessengerKey.currentState!,
-  //       _error,
-  //       SnackbarType.error,
-  //     );
-  //     setState(() {
-  //       _error = '';
-  //     });
-  //   }
-  // }
+    if (_error.isNotEmpty) {
+      CustomSnackbar.show(
+        scaffoldMessengerKey.currentState!,
+        _error,
+        SnackbarType.error,
+      );
+      setState(() {
+        _error = '';
+      });
+    }
+  }
 
   void addError({String? error}) {
     if (!errors.contains(error)) {
@@ -164,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
                                   KeyboardUtil.hideKeyboard(context);
-                                  // _login();
+                                  _login();
                                 }
                               },
                             ),
@@ -199,7 +204,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontSize: getProportionateScreenWidth(16)),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegisterScreen()),
+                              );
+                            },
                             child: Text(
                               "Sign Up",
                               style: TextStyle(
